@@ -117,7 +117,7 @@ pub fn add_firmware(
     config.addOption(?[]const u8, "board_name", if (maybe_board) |brd| brd.name else null);
 
     config.addOption([]const u8, "chip_name", chip.name);
-    config.addOption([]const u8, "cpu_name", chip.name);
+    config.addOption([]const u8, "cpu_name", chip.cpu.name);
     config.addOption(usize, "end_of_stack", first_ram.offset + first_ram.length);
 
     const fw: *Firmware = host_build.allocator.create(Firmware) catch @panic("out of memory");
@@ -133,9 +133,7 @@ pub fn add_firmware(
         }),
         .target = options.target,
         .output_files = Firmware.OutputFileMap.init(host_build.allocator),
-
         .config = config,
-
         .modules = .{
             .microzig = micro_build.createModule(.{
                 .root_source_file = .{ .cwd_relative = mz.microzig_core.builder.pathFromRoot("src/microzig.zig") },
@@ -146,13 +144,10 @@ pub fn add_firmware(
                     },
                 },
             }),
-
             .cpu = undefined,
             .chip = undefined,
-
             .board = null,
             .hal = null,
-
             .app = undefined,
         },
     };
@@ -167,7 +162,7 @@ pub fn add_firmware(
     fw.modules.microzig.addImport("chip", fw.modules.chip);
 
     fw.modules.cpu = micro_build.createModule(.{
-        .root_source_file = chip.cpu.source_file,
+        .root_source_file = chip.cpu.root_source_file,
         .imports = &.{
             .{ .name = "microzig", .module = fw.modules.microzig },
         },
@@ -176,7 +171,7 @@ pub fn add_firmware(
 
     if (maybe_hal) |hal| {
         fw.modules.hal = micro_build.createModule(.{
-            .root_source_file = hal.source_file,
+            .root_source_file = hal.root_source_file,
             .imports = &.{
                 .{ .name = "microzig", .module = fw.modules.microzig },
             },
@@ -186,7 +181,7 @@ pub fn add_firmware(
 
     if (maybe_board) |brd| {
         fw.modules.board = micro_build.createModule(.{
-            .root_source_file = brd.source_file,
+            .root_source_file = brd.root_source_file,
             .imports = &.{
                 .{ .name = "microzig", .module = fw.modules.microzig },
             },
@@ -195,7 +190,7 @@ pub fn add_firmware(
     }
 
     fw.modules.app = host_build.createModule(.{
-        .root_source_file = options.source_file,
+        .root_source_file = options.root_source_file,
         .imports = &.{
             .{ .name = "microzig", .module = fw.modules.microzig },
         },
@@ -345,7 +340,7 @@ pub const FirmwareOptions = struct {
     optimize: std.builtin.OptimizeMode,
 
     /// The root source file for the application. This is your `src/main.zig` file.
-    source_file: LazyPath,
+    root_source_file: LazyPath,
 
     // Overrides:
 
@@ -510,7 +505,7 @@ pub const Firmware = struct {
         fw.modules.app.dependencies.put(
             module_name,
             fw.host_build.createModule(.{
-                .source_file = options.getOutput(),
+                .root_source_file = options.getOutput(),
             }),
         ) catch @panic("OOM");
     }
