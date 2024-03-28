@@ -15,9 +15,5 @@
             .url = "https://github.com/mitchellh/zig-build-libxml2/archive/d19d7c83222498cc8b0dda760dfe7c1bd6ca3695.tar.gz",
             .hash = "12205a9b00f7740f237c2046c1af280d383fdf087454d2178a373ed665b004310cbe",
         },
-        .clap = .{
-            .url = "https://github.com/Hejsil/zig-clap/archive/209ba4da76e46412acfe18f711cb0b041ff37f10.tar.gz",
-            .hash = "12200103e7b4a0cb162f2912df4fe97914024a25b5c9fcce6ea4119744f3f2a7f24e",
-        },
     },
 }
