@@ -12,8 +12,9 @@
     },
     .dependencies = .{
         .libxml2 = .{
-            .url = "https://github.com/mitchellh/zig-build-libxml2/archive/d19d7c83222498cc8b0dda760dfe7c1bd6ca3695.tar.gz",
-            .hash = "12205a9b00f7740f237c2046c1af280d383fdf087454d2178a373ed665b004310cbe",
+            //.url = "https://github.com/mitchellh/zig-build-libxml2/archive/d19d7c83222498cc8b0dda760dfe7c1bd6ca3695.tar.gz",
+            //.hash = "12205a9b00f7740f237c2046c1af280d383fdf087454d2178a373ed665b004310cbe",
+            .path = "../../../zig-build-libxml2",
         },
     },
 }
