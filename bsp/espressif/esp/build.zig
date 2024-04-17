@@ -51,5 +51,5 @@ pub const chips = struct {
 pub const boards = struct {};
 
 pub fn build(b: *std.Build) void {
-    _ = b;
+    _ = b.step("test", "Run platform agnostic unit tests");
 }

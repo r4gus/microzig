@@ -63,5 +63,5 @@ fn postprocess(b: *std.Build, input: std.Build.LazyPath) std.Build.LazyPath {
 }
 
 pub fn build(b: *std.Build) void {
-    _ = b;
+    _ = b.step("test", "Run platform agnostic unit tests");
 }

@@ -27,6 +27,26 @@ jobs:
 
       - name: Build
         run: zig build -Doptimize=ReleaseSmall
-      
+
+      - name: Unit Test BSPs
+        run: zig build run-bsp-tests -Doptimize=ReleaseSmall
+
       - name: Dry run packaging
-        run: zig build package -- https://example.com
+        run: |
+          MICROZIG_VERSION=$(zig build package -- get-version)
+          zig build package -- http://localhost:8000
+          python3 -m http.server 8000 --directory boxzer-out > http.log &
+
+          cd tools/package-test
+          zig fetch --save=microzig http://localhost:8000/microzig-${MICROZIG_VERSION}.tar.gz
+          zig build -Doptimize=ReleaseSmall
+          zig build run-bsp-tests=ReleaseSmall
+
+          # clean up server
+          jobs -p | xargs kill
+
+      - name: Upload HTTP logs
+        uses: actions/upload-artifact
+        with:
+          name: http.log
+          path: http.log

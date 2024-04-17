@@ -58,5 +58,5 @@ pub const boards = struct {
 };
 
 pub fn build(b: *Build) void {
-    _ = b;
+    _ = b.step("test", "Run platform agnostic unit tests");
 }

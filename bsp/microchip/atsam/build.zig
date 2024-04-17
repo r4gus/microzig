@@ -2,8 +2,7 @@ const std = @import("std");
 const MicroZig = @import("microzig/build");
 
 pub fn build(b: *std.Build) void {
-    _ = b;
-    //  Dummy func to make package manager happy
+    _ = b.step("test", "Run platform agnostic unit tests");
 }
 
 fn root() []const u8 {

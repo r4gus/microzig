@@ -11,8 +11,14 @@ fn root() []const u8 {
 const build_root = root();
 
 pub fn build(b: *Build) !void {
-    // TODO: hook up tests
-    _ = b;
+    const unit_tests = b.addTest(.{
+        .root_source_file = .{ .path = "src/hal.zig" },
+    });
+    unit_tests.addIncludePath(.{ .path = "src/hal/pio/assembler" });
+
+    const unit_tests_run = b.addRunArtifact(unit_tests);
+    const test_step = b.step("test", "Run platform agnostic unit tests");
+    test_step.dependOn(&unit_tests_run.step);
 }
 
 pub const chips = struct {

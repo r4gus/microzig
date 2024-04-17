@@ -69,6 +69,12 @@ pub fn build(b: *Build) void {
     const parts_db = generate_parts_db(b) catch @panic("OOM");
     const parts_db_json = b.addInstallFile(parts_db, "parts-db.json");
     package_step.dependOn(&parts_db_json.step);
+
+    const test_bsps_step = b.step("run-bsp-tests", "Run all platform agnostic tests for BSPs");
+    inline for (bsps) |bsp| {
+        const bsp_dep = b.dependency(bsp[0], .{});
+        test_bsps_step.dependOn(&bsp_dep.builder.top_level_steps.get("test").?.step);
+    }
 }
 
 const PartsDb = struct {

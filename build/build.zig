@@ -483,9 +483,9 @@ pub const Firmware = struct {
     /// Adds a regular dependency to your application.
     pub fn add_app_import(fw: *Firmware, name: []const u8, module: *std.Build.Module, options: AppDependencyOptions) void {
         if (options.depend_on_microzig) {
-            module.dependencies.put("microzig", fw.modules.microzig) catch @panic("OOM");
+            module.addImport("microzig", fw.modules.microzig);
         }
-        fw.modules.app.dependencies.put(name, module) catch @panic("OOM");
+        fw.modules.app.addImport(name, module);
     }
 
     pub fn add_include_path(fw: *Firmware, path: LazyPath) void {
@@ -500,14 +500,8 @@ pub const Firmware = struct {
         fw.artifact.addCSourceFile(source);
     }
 
-    pub fn add_options(fw: *Firmware, module_name: []const u8, options: *std.Build.OptionsStep) void {
-        fw.artifact.addOptions(module_name, options);
-        fw.modules.app.dependencies.put(
-            module_name,
-            fw.host_build.createModule(.{
-                .root_source_file = options.getOutput(),
-            }),
-        ) catch @panic("OOM");
+    pub fn add_options(fw: *Firmware, module_name: []const u8, options: *std.Build.Step.Options) void {
+        fw.modules.app.addOptions(module_name, options);
     }
 
     pub fn add_object_file(fw: *Firmware, source: LazyPath) void {

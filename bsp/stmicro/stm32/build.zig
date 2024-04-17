@@ -9,8 +9,7 @@ const build_root = root();
 const KiB = 1024;
 
 pub fn build(b: *std.Build) !void {
-    _ = b;
-    //  Dummy func to make package manager happy
+    _ = b.step("test", "Run platform agnostic unit tests");
 }
 
 pub const chips = struct {
