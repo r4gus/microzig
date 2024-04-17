@@ -45,8 +45,8 @@ jobs:
           # clean up server
           jobs -p | xargs kill
 
-      - name: Upload HTTP logs
-        uses: actions/upload-artifact@v3
-        with:
-          name: http.log
-          path: http.log
+          #- name: Upload HTTP logs
+          #  uses: actions/upload-artifact@v3
+          #  with:
+          #    name: http.log
+          #    path: http.log
