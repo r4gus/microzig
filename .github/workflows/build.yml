@@ -46,7 +46,7 @@ jobs:
           jobs -p | xargs kill
 
       - name: Upload HTTP logs
-        uses: actions/upload-artifact
+        uses: actions/upload-artifact@v3
         with:
           name: http.log
           path: http.log
