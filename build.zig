@@ -25,8 +25,8 @@ const example_dep_names: []const []const u8 = &.{
     //"examples/microchip/avr",
     "examples/gigadevice/gd32",
     "examples/stmicro/stm32",
-    "examples/espressif/esp",
-    "examples/raspberrypi/rp2040",
+    //"examples/espressif/esp",
+    //"examples/raspberrypi/rp2040",
 };
 
 const bsps = .{
