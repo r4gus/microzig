@@ -36,6 +36,7 @@ jobs:
       - name: Dry run packaging
         run: |
           MICROZIG_VERSION=$(zig build package -- get-version)
+          echo microzig version: $MICROZIG_VERSION
           zig build package -- http://localhost:8000
           python3 -m http.server 8000 --directory boxzer-out > http.log &
           sleep 1
