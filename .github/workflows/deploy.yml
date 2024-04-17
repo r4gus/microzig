@@ -12,9 +12,6 @@ jobs:
   deploy-packages:
     runs-on: ubuntu-latest
     steps:
-      - name: Extract tag name
-        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -26,19 +23,21 @@ jobs:
         with:
           version: master
 
+      - name: Extract version
+        run: echo "MICROZIG_VERSION=$(zig build package -- get-version)" >> $GITHUB_ENV
+
       - name: Assemble Packages
         run: zig build package -- "${{ secrets.DOWNLOADS_URL }}"
-
-      # TODO: Validation
 
       - name: Deploy
         uses: easingthemes/ssh-deploy@main
         with:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
           ARGS: "-vzrli"
-          SOURCE: "boxzer-out/${{ env.TAG_NAME }}/"
+          SOURCE: "boxzer-out/"
           REMOTE_HOST: ${{ secrets.DEPLOY_HOST }}
           REMOTE_USER: ${{ secrets.DEPLOY_USER }}
           REMOTE_PORT: ${{ secrets.DEPLOY_PORT }}
           TARGET: "."
 
+      # TODO: create github release
